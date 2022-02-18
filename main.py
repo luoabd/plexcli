@@ -1,3 +1,8 @@
 from account import Account
+from prompts import Prompts
 
-Account.login()
+# User login
+account = Account.login()
+
+# Choose server
+resource = Prompts.get_servers(account)

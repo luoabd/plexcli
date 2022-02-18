@@ -23,7 +23,7 @@ class Account():
                 account = MyPlexAccount(username, password)
                 print("Successfully logged in!")
                 print(f"Welcome {account.username}")
-                break
+                return account
             except Exception as e:
                 if isinstance(e, plexapi.exceptions.Unauthorized):
                     print("Wrong username or password! Please try again.")
