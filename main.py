@@ -5,4 +5,10 @@ from prompts import Prompts
 account = Account.login()
 
 # Choose server
-resource = Prompts.get_servers(account)
+# TODO: Integrate with config file
+resource_name = Prompts.get_servers(account)
+plex = account.resource(resource_name).connect()
+
+# Initialize and start the navigation menu
+menu = Prompts(plex)
+menu.nav_menu()
