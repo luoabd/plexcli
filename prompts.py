@@ -18,9 +18,7 @@ class Prompts():
 
     def get_servers(account):
         server_list = account.resources()
-        server_names = []
-        for server in server_list:
-            server_names.append(server.name)
+        server_names = [server.name for server in server_list]
         questions = [
             inquirer.List('server',
                           message="Which server do you want to connect to?",
@@ -60,9 +58,7 @@ class Prompts():
 
     def browse_library_menu(self):
         library_sections = self.plex.library.sections()
-        section_names = []
-        for section in library_sections:
-            section_names.append(section.title)
+        section_names = [section.title for section in library_sections]
         section_names.append("<= Go back")
         questions = [
             inquirer.List('section',
@@ -96,7 +92,7 @@ class Prompts():
             case 1:
                 self.show_all(section)
             case 2:
-                print("show_available_filters()")
+                self.show_available_filters(section)
             case 3:
                 print("show_recently_added()")
             case 0:
@@ -104,9 +100,7 @@ class Prompts():
 
     def show_all(self, section):
         # TODO: Pagination
-        all_media_names = []
-        for media in section.all():
-            all_media_names.append(media.title)
+        all_media_names = [media.title for media in section.all()]
         all_media_names.append("<= Go back")
         questions = [
             inquirer.List('media',
