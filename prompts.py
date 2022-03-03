@@ -90,7 +90,7 @@ class Prompts():
         choice_menu = answers['menu']
         match choice_menu:
             case 1:
-                self.show_all(section)
+                self.show_media(section)
             case 2:
                 self.show_available_filters(section)
             case 3:
@@ -98,9 +98,13 @@ class Prompts():
             case 0:
                 exit()
 
-    def show_all(self, section):
+    def show_media(self, section, m_filter_choice=None, m_filter_value=None):
         # TODO: Pagination
-        all_media_names = [media.title for media in section.all()]
+        if m_filter_choice == None:
+            all_media_names = [media.title for media in section.all()]
+        else:
+            filter_attrs = {m_filter_choice.lower(): m_filter_value}
+            all_media_names = [media.title for media in section.search(**filter_attrs)]
         all_media_names.append("<= Go back")
         questions = [
             inquirer.List('media',
@@ -117,3 +121,39 @@ class Prompts():
             case _:
                 streamable_url = section.get(choice_media).getStreamURL()
                 return(streamable_url)
+
+    def show_available_filters(self, section):
+        all_filters_names = [m_filter.title for m_filter in section.listFilters()]
+        all_filters_names.append("<= Go back")
+        questions = [
+            inquirer.List('filters',
+                          message="Browse by:",
+                          choices=all_filters_names,
+                          ),
+        ]
+        answers = inquirer.prompt(questions)
+        choice_filter = answers['filters']
+        match choice_filter:
+            case "<= Go back":
+                # TODO: go to previous menu
+                exit()
+            case _:
+                self.show_filter_choices(section, choice_filter)
+
+    def show_filter_choices(self, section, m_filter):
+        all_filter_choices = [m_filter_choice.title for m_filter_choice in section.listFilterChoices(m_filter.lower())]
+        all_filter_choices.append("<= Go back")
+        questions = [
+            inquirer.List('m_filter_choice',
+                          message=f"{m_filter}:",
+                          choices=all_filter_choices,
+                          ),
+        ]
+        answers = inquirer.prompt(questions)
+        m_filter_value = answers['m_filter_choice']
+        match m_filter_value:
+            case "<= Go back":
+                # TODO: go to previous menu
+                exit()
+            case _:
+                self.show_media(section, m_filter, m_filter_value)
