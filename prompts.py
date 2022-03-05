@@ -98,7 +98,7 @@ class Prompts():
             case 0:
                 exit()
 
-    def show_media(self, section, recently_added=None, m_filter_choice=None, m_filter_value=None):
+    def show_media(self, section, m_filter_choice=None, m_filter_value=None, recently_added=None,):
         # TODO: Pagination
         if m_filter_choice:
             filter_attrs = {m_filter_choice: m_filter_value}
