@@ -103,7 +103,7 @@ class Prompts():
         if m_filter_choice == None:
             all_media_names = [media.title for media in section.all()]
         else:
-            filter_attrs = {m_filter_choice.lower(): m_filter_value}
+            filter_attrs = {m_filter_choice: m_filter_value}
             all_media_names = [media.title for media in section.search(**filter_attrs)]
         all_media_names.append("<= Go back")
         questions = [
@@ -123,25 +123,25 @@ class Prompts():
                 return(streamable_url)
 
     def show_available_filters(self, section):
-        all_filters_names = [m_filter.title for m_filter in section.listFilters()]
-        all_filters_names.append("<= Go back")
+        available_filters = [(m_filter.title, m_filter.filter) for m_filter in section.listFilters()]
+        available_filters.append(("<= Go back",0))
         questions = [
             inquirer.List('filters',
                           message="Browse by:",
-                          choices=all_filters_names,
+                          choices=available_filters,
                           ),
         ]
         answers = inquirer.prompt(questions)
         choice_filter = answers['filters']
         match choice_filter:
-            case "<= Go back":
+            case 0:
                 # TODO: go to previous menu
                 exit()
             case _:
                 self.show_filter_choices(section, choice_filter)
 
     def show_filter_choices(self, section, m_filter):
-        all_filter_choices = [m_filter_choice.title for m_filter_choice in section.listFilterChoices(m_filter.lower())]
+        all_filter_choices = [m_filter_choice.title for m_filter_choice in section.listFilterChoices(m_filter)]
         all_filter_choices.append("<= Go back")
         questions = [
             inquirer.List('m_filter_choice',
