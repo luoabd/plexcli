@@ -94,17 +94,19 @@ class Prompts():
             case 2:
                 self.show_available_filters(section)
             case 3:
-                print("show_recently_added()")
+                self.show_media(section, recently_added = True)
             case 0:
                 exit()
 
-    def show_media(self, section, m_filter_choice=None, m_filter_value=None):
+    def show_media(self, section, recently_added=None, m_filter_choice=None, m_filter_value=None):
         # TODO: Pagination
-        if m_filter_choice == None:
-            all_media_names = [media.title for media in section.all()]
-        else:
+        if m_filter_choice:
             filter_attrs = {m_filter_choice: m_filter_value}
             all_media_names = [media.title for media in section.search(**filter_attrs)]
+        elif recently_added:
+            all_media_names = [media.title for media in section.recentlyAddedMovies(maxresults=20)]
+        else:
+            all_media_names = [media.title for media in section.all()]
         all_media_names.append("<= Go back")
         questions = [
             inquirer.List('media',
