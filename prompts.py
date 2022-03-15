@@ -1,5 +1,6 @@
 import inquirer
-
+from player import Player
+import mpv
 
 class Prompts():
     def __init__(self, plex):
@@ -122,7 +123,11 @@ class Prompts():
                 exit()
             case _:
                 streamable_url = section.get(choice_media).getStreamURL()
-                return(streamable_url)
+                try:
+                    player = Player()
+                    player.play(streamable_url)
+                except mpv.ShutdownError:
+                    print('Closed by user')
 
     def show_available_filters(self, section):
         available_filters = [(m_filter.title, m_filter.filter) for m_filter in section.listFilters()]
